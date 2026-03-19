@@ -1,5 +1,4 @@
 ﻿//C#-nRepository-2026/Entities/Character.cs
-using c__repository_2026.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
