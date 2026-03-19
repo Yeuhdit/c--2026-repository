@@ -1,11 +1,10 @@
-﻿// נתיב: c#-2026-repository/Entities/Gallery.cs
-using c__repository_2026.Models;
+﻿//C#-nRepository-2026/Entities/Gallery.cs
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace c__repository_2026.Entities
+namespace c__nRepository_2026.Entities
 {
     public class Gallery
     {
@@ -13,30 +12,28 @@ namespace c__repository_2026.Entities
         public int Id { get; set; }
 
         [Required(ErrorMessage = "שם הגלריה הוא שדה חובה")]
-        [MaxLength(100, ErrorMessage = "שם הגלריה לא יכול לחרוג מ-100 תווים")]
+        [MaxLength(200)]
         public string Name { get; set; } = string.Empty;
 
-        [MaxLength(500)]
-        public string Description { get; set; } = string.Empty;
-
+        [Required]
         public int CharacterId { get; set; }
+
+
+        [ForeignKey(nameof(CharacterId))]
+        public virtual Character Character { get; set; }
+
+        public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
         [Required]
         public int UserId { get; set; }
 
+        [Required]
         public DateTime CreatedDate { get; set; }
-
-        // קשרי גומלין (Navigation Properties)
-        [ForeignKey("CharacterId")]
-        public virtual Character Character { get; set; }
-
-        public virtual ICollection<Image> Images { get; set; } = new List<Image>();
     }
 }
 /*
- * מטרת העמוד:
- * מחלקה המייצגת גלריית תמונות במערכת (טבלת Galleries במסד הנתונים).
- * כוללת בדיקות תקינות כפי שנדרש על ידי המורה (Required, MaxLength).
- * קשרי הגומלין מציינים שגלריה יכולה להיות משויכת לדמות מרכזית אחת (Character), 
- * ושהיא מכילה אוסף של תמונות (ICollection של Image - קשר של יחיד לרבים).
+ * מטרת הקובץ (Entity - Gallery):
+ * מחלקה זו מייצגת את טבלת ה'גלריות'. כל גלריה מכילה אוסף של תמונות הקשורות לדמות מסוימת 
+ * (על פי בקשת הלקוח, המערכת מחזירה גלריה עם כל התמונות שבהן מופיעה הדמות).
+ * המאפיין UserId מייצג את הבעלים של הגלריה (הכנה למערכת ההרשאות - סעיף 21).
  */

@@ -1,12 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//C#-nRepository-2026/Repositories/DetectedCharacterRepository.cs
 
-namespace c__2026_repository.Repositories
+using c__nRepository_2026.Interfaces;
+using c__nRepository_2026.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace c__nRepository_2026.Repositories
 {
-    internal class DetectedRepository
+    public class DetectedCharacterRepository : IRepository<DetectedCharacter>
     {
+        private readonly IContext _context;
+
+        public DetectedCharacterRepository(IContext context) { _context = context; }
+
+        public async Task<DetectedCharacter> AddItemAsync(DetectedCharacter item)
+        {
+            item.DetectionDate = DateTime.Now;
+            await _context.DetectedCharacters.AddAsync(item);
+            await _context.SaveChangesAsync();
+            return item;
+        }
+
+        public async Task DeleteItemAsync(int id)
+        {
+            var detection = await GetByIdAsync(id);
+            if (detection != null)
+            {
+                _context.DetectedCharacters.Remove(detection);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<DetectedCharacter?> GetByIdAsync(int id)
+        {
+            return await _context.DetectedCharacters
+                .AsNoTracking()
+                .FirstOrDefaultAsync(dc => dc.Id == id);
+        }
+
+        public async Task<List<DetectedCharacter>> GetAllAsync()
+        {
+            return await _context.DetectedCharacters
+                .AsNoTracking()
+                .OrderByDescending(dc => dc.DetectionDate)
+                .ToListAsync();
+        }
+
+        public async Task UpdateItemAsync(int id, DetectedCharacter item)
+        {
+            if (id != item.Id) return;
+            await _context.SaveChangesAsync();
+        }
+
+        // פונקציות ייחודיות - שליפה לפי תמונה או דמות
+        public async Task<List<DetectedCharacter>> GetDetectionsByImageIdAsync(int imageId)
+        {
+            return await _context.DetectedCharacters
+                .AsNoTracking()
+                .Where(dc => dc.ImageId == imageId)
+                .Include(dc => dc.Character) // מביא גם את פרטי הדמות
+                .ToListAsync();
+        }
     }
 }
+/*
+ * מטרת הקובץ (DetectedCharacterRepository):
+ * מחלקה זו אחראית על ניהול טבלת 'זיהויים' (DetectedCharacters) במסד הנתונים.
+ * זוהי למעשה טבלת הגישור שמחברת בין תמונה לדמות שזוהתה בה.
+ * * שינויים שבוצעו כדי לעמוד בדרישות הפרויקט:
+ * 1. הוספת Using ל-Microsoft.EntityFrameworkCore ול-System.Threading.Tasks.
+ * 2. כל הפונקציות הומרו לא-סינכרוניות (async/await ומחזירות Task) בהתאם לדרישת המורה שהפרויקט יהיה א-סינכרוני בכל גישה ל-DB.
+ * 3. פונקציות שליפה שונו להשתמש ב-ToListAsync ו-FirstOrDefaultAsync.
+ * 4. הפונקציות הייחודיות (כמו שליפת כל הזיהויים עבור תמונה ספציפית או דמות ספציפית) עודכנו גם הן לעבודה א-סינכרונית.
+ */

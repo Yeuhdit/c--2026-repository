@@ -1,26 +1,24 @@
-﻿// נתיב: c#-2026-repository/Interfaces/IContext.cs
-using c__repository_2026.Models;
+﻿//C#-nRepository-2026/Interfaces/IContext.cs
+using c__nRepository_2026.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace c__repository_2026.Interfaces
+namespace c__nRepository_2026.Interfaces
 {
     public interface IContext
     {
         DbSet<Character> Characters { get; set; }
+        DbSet<DetectedCharacter> DetectedCharacters { get; set; }
         DbSet<Gallery> Galleries { get; set; }
         DbSet<Image> Images { get; set; }
-        DbSet<DetectedCharacter> DetectedCharacters { get; set; }
+        DbSet<User> Users { get; set; } // הוספנו את המשתמשים!
 
-        // חתימה לפונקציית השמירה הא-סינכרונית של Entity Framework
+        int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
 /*
- * מטרת העמוד:
- * ממשק זה משמש כהפשטה (Abstraction) ל-DbContext שלנו (שיושב בפרויקט ה-Data).
- * המטרה היא שמחלקות ה-Repository יכירו רק את הממשק הזה ולא את ה-SQL ישירות, 
- * מה שעוזר ל-Dependency Injection ולהפרדת שכבות נכונה כפי שנדרש.
+ * מטרת הקובץ (Interface - IContext):
+ * הגדרת חוזה (Contract) המייצג את מסד הנתונים. 
+ * המטרה היא ששכבת ה-Repository תעבוד מול הממשק הזה ולא מול ה-DbContext האמיתי ישירות.
+ * זה מאפשר "הזרקת תלויות" (DI - סעיף 4) ומקל מאוד על כתיבת בדיקות יחידה (Unit Tests) אם נצטרך בעתיד.
  */

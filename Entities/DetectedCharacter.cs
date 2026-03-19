@@ -1,10 +1,9 @@
-﻿// נתיב: c#-2026-repository/Entities/DetectedCharacter.cs
+﻿//C#-nRepository-2026/Entities/DetectedCharacter.cs
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace c__repository_2026.Models
+namespace c__nRepository_2026.Entities
 {
     public class DetectedCharacter
     {
@@ -18,27 +17,22 @@ namespace c__repository_2026.Models
         public int CharacterId { get; set; }
 
         [Required]
-        [Range(0, 100, ErrorMessage = "אחוז הזיהוי חייב להיות בין 0 ל-100")]
-        public double Confidence { get; set; }
+        [Range(0.0, 1.0, ErrorMessage = "רמת הביטחון (Confidence) חייבת להיות בין 0 ל-1")]
+        public float Confidence { get; set; }
 
-        public string FaceCoordinates { get; set; } = string.Empty;
-
+        [Required]
         public DateTime DetectionDate { get; set; }
 
-        [MaxLength(50)]
-        public string ModelUsed { get; set; } = string.Empty;
-
-        // קשרי גומלין (Navigation Properties) - מקשרים חזרה לתמונה ולדמות
-        [ForeignKey("ImageId")]
+        [ForeignKey(nameof(ImageId))]
         public virtual Image Image { get; set; }
 
-        [ForeignKey("CharacterId")]
+        [ForeignKey(nameof(CharacterId))]
         public virtual Character Character { get; set; }
     }
 }
 /*
- * מטרת העמוד:
- * מחלקה המייצגת זיהוי ספציפי של פרצוף בתוך תמונה.
- * הוספנו כאן [ForeignKey] כדי להדגיש את החיבור ההדוק לטבלת התמונות ולטבלת הדמויות.
- * כמו כן, ישנה בדיקת תקינות ([Range]) שמוודאת שרמת הביטחון (Confidence) תמיד תהיה ערך הגיוני של אחוזים.
+ * מטרת הקובץ (Entity - DetectedCharacter):
+ * מחלקה זו מייצגת טבלת 'זיהויים' - קשר רבים-לרבים (או ישות מקשרת) בין תמונה לדמות.
+ * היא מתעדת באיזו תמונה (ImageId) זוהתה איזו דמות (CharacterId), ומאיזו רמת ביטחון של האלגוריתם (Confidence).
+ * נוספו [ForeignKey] כדי להדגיש את קשרי הגומלין (סעיף 7) ו-[Range] לאימות אחוזי הזיהוי.
  */
