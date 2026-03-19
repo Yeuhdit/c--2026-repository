@@ -7,7 +7,8 @@ namespace c__nRepository_2026.Interfaces
     // הממשק הוגדר כגנרי (T) כדי לחסוך כפל קוד ולאפשר עבודה אחידה מול כל הטבלאות
     public interface IRepository<T> where T : class
     {
-        Task<List<T>> GetAllAsync();
+        //Task, הוא יכתוב לך שזה שייך ל-System.Threading.Tasks ויתן הסבר קצר שזו פעולה שמייצגת עבודה א-סינכרונית.
+        Task <List<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int id); // סימן שאלה מציין שהאובייקט יכול להיות null
         Task<T> AddItemAsync(T item);
         Task DeleteItemAsync(int id);
