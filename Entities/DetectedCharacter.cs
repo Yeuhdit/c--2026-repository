@@ -1,8 +1,8 @@
-﻿//C#-nRepository-2026/Entities/DetectedCharacter.cs
+﻿// הנתיב המלא: C#-nRepository-2026/Entities/DetectedCharacter.cs
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+// ודאי שהשורה הזו קיימת - היא אומרת לו להסתכל בתוך התיקייה של עצמו
 namespace c__nRepository_2026.Entities
 {
     public class DetectedCharacter
@@ -17,25 +17,25 @@ namespace c__nRepository_2026.Entities
         public int CharacterId { get; set; }
 
         [Required]
-        //Range
         [Range(0.0, 1.0, ErrorMessage = "רמת הביטחון (Confidence) חייבת להיות בין 0 ל-1")]
         public float Confidence { get; set; }
 
+        // --- הנה השדה שהיה חסר לנו! כאן נשמור את מיקום הפנים בתמונה ---
+        [MaxLength(100)]
+        public string FaceCoordinates { get; set; } = string.Empty;
+
         [Required]
         public DateTime DetectionDate { get; set; }
-        // קשרי גומליןForeignKey
-        [ForeignKey(nameof(ImageId))]
-        public virtual Image Image { get; set; }
+
+      [ForeignKey(nameof(ImageId))]
+        public virtual c__nRepository_2026.Entities.Image Image { get; set; }
 
         [ForeignKey(nameof(CharacterId))]
         public virtual Character Character { get; set; }
     }
 }
 /*
- * זיהוי דמותDetectedCharacter
- * מטרת הקובץ (Entity - DetectedCharacter):
- * מחלקה זו מייצגת טבלת 'זיהויים' - קשר רבים-לרבים (או ישות מקשרת) בין תמונה לדמות.
- * היא מתעדת באיזו תמונה (ImageId) זוהתה איזו דמות (CharacterId), 
- * ומאיזו רמת ביטחון של האלגוריתם (Confidence).
- * נוספו [ForeignKey] כדי להדגיש את קשרי הגומלין (סעיף 7) ו-[Range] לאימות אחוזי הזיהוי.
+ * מטרת העמוד (Entity - DetectedCharacter):
+ * מייצג את טבלת הזיהויים ב-SQL. הוספנו את השדה FaceCoordinates כדי שנוכל
+ * לשמור את הקואורדינטות שהאלגוריתם של Azure מחזיר לנו.
  */
